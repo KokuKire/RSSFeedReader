@@ -1,50 +1,50 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# RSS Feed Reader Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Security-First Input Handling
+Validate all user inputs strictly. All feed URLs and user-provided data MUST be sanitized before processing. In MVP, assume URLs are valid but reject obviously malformed input. For Extended-MVP and beyond, implement proper URL validation and feed content sanitization. Never trust external feed data; implement safe parsing with error boundaries.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Incremental Delivery with Clear Scope
+Build MVP first (subscription management only) before adding complexity. Each phase clearly defines what is IN scope and what is DEFERRED. MVP must not include feed fetching, parsing, persistence, or removal capabilities—these belong in Extended-MVP or post-MVP. This discipline keeps development fast and prevents scope creep.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Code Quality Through Testing and Clarity
+Unit tests MUST cover core business logic (subscription management, API contracts). Integration tests MUST verify API communication and feed parsing (Extended-MVP phase). Tests are written before or alongside implementation. Code MUST be readable: clear variable names, small focused methods, separation of concerns between backend (API, data) and frontend (UI, state).
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Separation of Concerns: Backend and Frontend
+Backend (ASP.NET Core Web API) handles data management and (in Extended-MVP) feed operations. Frontend (Blazor WebAssembly) handles UI and user interaction. Each layer MUST be independently testable. API contracts are explicit and versioned. Frontend MUST never directly fetch or parse feeds—all complex operations go through the backend.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Maintainability Through Simplicity (YAGNI)
+Start simple: in-memory storage for MVP, no premature optimization or extra features. Add complexity only when extending to the next phase. Keep dependencies minimal. All architectural decisions MUST be documented with rationale. Code reviews MUST verify adherence to these principles.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Architecture and Technology Stack
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+ASP.NET Core Web API backend with Blazor WebAssembly frontend. This combination enables rapid MVP development while supporting future production enhancements (persistence, background polling, advanced features). Both technologies are cross-platform (Windows, macOS, Linux) and use C#, allowing code sharing where appropriate.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### Backend Responsibilities (MVP)
+- Expose REST API endpoints for subscription management
+- Store subscriptions in memory (List<string> model)
+- Return subscription list to frontend
+- Handle CORS for frontend access
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### Frontend Responsibilities (MVP)
+- Simple UI with input field to add subscription by URL
+- Display subscription list
+- API communication (add, retrieve subscriptions)
+
+### Phase 2 (Extended-MVP) Additions
+Backend adds feed fetching, parsing (System.ServiceModel.Syndication), and item retrieval.  
+Frontend adds manual refresh button and item display (title and link).
+
+## Development Workflow and Quality Gates
+
+1. **Before Implementation**: Specification and task planning MUST align with MVP scope and principles.
+2. **During Development**: Code changes MUST include unit tests for business logic. API contracts MUST be tested. Configuration (e.g., CORS, backend URL) MUST be verified before testing.
+3. **Pre-Commit**: All tests MUST pass. No merge of incomplete features outside the current phase scope.
+4. **Documentation**: Phase 2 (Blazor template cleanup) MUST be completed and verified before any UI implementation.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes conflicting practices. Amendments require documentation of rationale and migration plan. All new features MUST verify compliance with these principles. Deviations require explicit justification. This document is the source of truth for project governance; when ambiguous, escalate to stakeholder discussion rather than deciding independently.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-05-10 | **Last Amended**: 2026-05-10
